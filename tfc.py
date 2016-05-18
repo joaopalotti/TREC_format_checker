@@ -68,8 +68,9 @@ def check_line(nline, curr_top_id, prev_top_id, curr_doc, docs_so_far, curr_rank
             print "> python fix_zero_rank.py %s" % (filename)
             return False
 
-	print "Line %d -- Rank '%s' should have been '%d'." % (nline, curr_rank, int(prev_rank)+1)
-        return False
+        if int(prev_rank) != INV_DOC_RANK:
+	    print "Line %d -- Rank '%s' should have been '%d'." % (nline, curr_rank, int(prev_rank)+1)
+            return False
 
     if float(curr_score) > float(prev_score):
         print "Line %d -- Score '%s' should be smaller than '%s'." % (nline, curr_score, prev_score)
