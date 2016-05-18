@@ -95,6 +95,11 @@ def check(filename):
     line = f.readline()
     nline = 1
     fields = re.split("\s+", line.strip())
+    if len(fields) != 6:
+        print "File %s -- line %d: it should contain 6 fields, but %d were found. Stoped here!" % (filename, nline, len(fields))
+        print fields
+        f.close()
+        return
 
     current_topic_id = fields[0]
     q0 = fields[1]
@@ -116,6 +121,12 @@ def check(filename):
     # Read rest of lines. nline starts from 2.
     for nline, line in enumerate(f.readlines(), 2):
         fields = re.split("\s+", line.strip())
+
+        if len(fields) != 6:
+            print "File %s -- line %d: it should contain 6 fields, but %d were found. Stoped here!" % (filename, nline, len(fields))
+            print fields
+            f.close()
+            return
 
         previous_topic_id = current_topic_id
 	previous_doc_rank = current_doc_rank
@@ -139,7 +150,7 @@ def check(filename):
 	    return
 
     f.close()
-    print "You run '%s' has the correct format!" % (system_name)
+    print "You file %s with run name '%s' has the correct format!" % (filename, system_name)
 
 
 if __name__ == "__main__":
