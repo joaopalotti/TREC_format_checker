@@ -87,12 +87,38 @@ def check_line(nline, curr_top_id, prev_top_id, curr_doc, docs_so_far, curr_rank
 
     return True
 
+def check_filename(filename):
+    """
+    This is not an extensive check, just a light error check for filenames in an incorrect format.
+    """
+
+    fields = filename.split("_")
+    valid_query_languages = ["EN", "CS", "FR", "HU", "DE", "PL", "SV"]
+
+    if filename[-4:] != ".dat":
+        return "Name your file as .dat"
+
+    if len(fields) != 3:
+        return "Your filename should have 2 and only 2 underlines (_)"
+
+    if fields[1] not in valid_query_languages:
+        return "%s not found. The <QueryLanguage> should be one of %s" % (fields[1], valid_query_languages)
+
+    return "OK"
+
 def check(filename):
     '''
      Check whether file is a valid TREC run.
     '''
     if not os.path.isfile(filename):
         print "File '%s' does not exist." % (filename)
+        return
+
+    status = check_filename(filename)
+    if status != "OK":
+        print "There is something wrong with your filename"
+        print "%s" % (status)
+        print "Be sure to name it correctly: <TeamName>_<QueryLanguage>_Run<RunNumber>.dat. Example: TUW_EN_Run1.dat or TUW_DE_Run2.dat"
         return
 
     f = open(filename)
@@ -144,8 +170,7 @@ def check(filename):
 	    return
 
     f.close()
-    print "You run '%s' has the correct format!" % (system_name)
-
+    print "Your run '%s' has the correct format!" % (system_name)
 
 if __name__ == "__main__":
     '''
