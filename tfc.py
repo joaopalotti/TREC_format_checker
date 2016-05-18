@@ -27,6 +27,8 @@ Goal: check if a participant run respects the following TREC format:
     6. QueryIDs are in ascending order
 """
 
+INV_DOC_RANK=-10
+
 def cancast(s, t=int):
     '''
         Check if it is possible to cast value s to type t.
@@ -37,7 +39,7 @@ def cancast(s, t=int):
     except ValueError:
         return False
 
-def check_line(nline, curr_top_id, prev_top_id, curr_doc, docs_so_far, curr_rank, prev_rank, curr_score, prev_score, curr_system_name, system_name):
+def check_line(nline, curr_top_id, prev_top_id, curr_doc, docs_so_far, curr_rank, prev_rank, curr_score, prev_score, curr_system_name, system_name, filename):
     """
         Main checker -- checks whether a line in the run file is correct comparing the values found in this line with previous seen values.
     """
@@ -60,9 +62,11 @@ def check_line(nline, curr_top_id, prev_top_id, curr_doc, docs_so_far, curr_rank
         return False
 
     if int(curr_rank) - 1 != int(prev_rank):
-	if int(prev_rank) == -1 and int(curr_rank) != 1:
-        	print "Line %d -- The first document of topic '%s' should have rank '1'." % (nline, curr_top_id)
-                return False
+	if int(prev_rank) == INV_DOC_RANK and int(curr_rank) != 1:
+            print "Line %d -- The first document of topic '%s' should have rank '1'." % (nline, curr_top_id)
+            print "We recommend you run the fix_zero_rank.py script:"
+            print "> python fix_zero_rank.py %s" % (filename)
+            return False
 
 	print "Line %d -- Rank '%s' should have been '%d'." % (nline, curr_rank, int(prev_rank)+1)
         return False
@@ -95,11 +99,6 @@ def check(filename):
     line = f.readline()
     nline = 1
     fields = re.split("\s+", line.strip())
-    if len(fields) != 6:
-        print "File %s -- line %d: it should contain 6 fields, but %d were found. Stoped here!" % (filename, nline, len(fields))
-        print fields
-        f.close()
-        return
 
     current_topic_id = fields[0]
     q0 = fields[1]
@@ -109,24 +108,18 @@ def check(filename):
     current_system_name = fields[5]
     docs_so_far = set([])
     previous_topic_id = 0
-    previous_doc_rank = 0
+    previous_doc_rank = INV_DOC_RANK
     previous_score = sys.float_info.max
 
     system_name = current_system_name
     if not check_line(nline, current_topic_id, previous_topic_id, current_document, docs_so_far, current_doc_rank,\
-            previous_doc_rank, current_score, previous_score, current_system_name, system_name):
+            previous_doc_rank, current_score, previous_score, current_system_name, system_name, filename):
         f.close()
 	return
 
     # Read rest of lines. nline starts from 2.
     for nline, line in enumerate(f.readlines(), 2):
         fields = re.split("\s+", line.strip())
-
-        if len(fields) != 6:
-            print "File %s -- line %d: it should contain 6 fields, but %d were found. Stoped here!" % (filename, nline, len(fields))
-            print fields
-            f.close()
-            return
 
         previous_topic_id = current_topic_id
 	previous_doc_rank = current_doc_rank
@@ -141,16 +134,16 @@ def check(filename):
 
 	if current_topic_id != previous_topic_id:
 	    docs_so_far = set([])
-    	    previous_doc_rank = 0
+    	    previous_doc_rank = INV_DOC_RANK
             previous_score = sys.float_info.max
 
         if not check_line(nline, current_topic_id, previous_topic_id, current_document, docs_so_far, current_doc_rank,\
-            previous_doc_rank, current_score, previous_score, current_system_name, system_name):
+            previous_doc_rank, current_score, previous_score, current_system_name, system_name, filename):
             f.close()
 	    return
 
     f.close()
-    print "You file %s with run name '%s' has the correct format!" % (filename, system_name)
+    print "You run '%s' has the correct format!" % (system_name)
 
 
 if __name__ == "__main__":
