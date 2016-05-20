@@ -92,7 +92,7 @@ def check_filename(filename):
     This is not an extensive check, just a light error check for filenames in an incorrect format.
     """
 
-    fields = filename.split("_")
+    fields = os.path.basename(filename).split("_")
     valid_query_languages = ["EN", "CS", "FR", "HU", "DE", "PL", "SV"]
 
     if filename[-4:] != ".txt":
