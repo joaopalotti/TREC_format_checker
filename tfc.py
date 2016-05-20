@@ -95,8 +95,8 @@ def check_filename(filename):
     fields = filename.split("_")
     valid_query_languages = ["EN", "CS", "FR", "HU", "DE", "PL", "SV"]
 
-    if filename[-4:] != ".dat":
-        return "Name your file as .dat"
+    if filename[-4:] != ".txt":
+        return "Name your file as .txt"
 
     if len(fields) != 3:
         return "Your filename should have 2 and only 2 underlines (_)"
