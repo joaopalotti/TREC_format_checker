@@ -118,7 +118,7 @@ def check(filename):
     if status != "OK":
         print "There is something wrong with your filename"
         print "%s" % (status)
-        print "Be sure to name it correctly: <TeamName>_<QueryLanguage>_Run<RunNumber>.dat. Example: TUW_EN_Run1.dat or TUW_DE_Run2.dat"
+        print "Be sure to name it correctly: <TeamName>_<QueryLanguage>_Run<RunNumber>.txt. Example: TUW_EN_Run1.txt or TUW_DE_Run2.txt"
         return
 
     f = open(filename)
