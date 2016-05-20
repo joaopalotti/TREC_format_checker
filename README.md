@@ -26,5 +26,9 @@ Some of the necessary conditions to have a valid run for CLEF eHealth 2016 are:
 3. A document cannot appear twice in the list of document for the same query.
 4. The same teamID/runID is used all over the run.
 5. QueryIDs are in ascending order
+<<<<<<< HEAD
 6. Filename follows the convention: <TeamName>_<QueryLanguage>_Run<RunNumber>.<FileFormat>. Example: TUW_EN_Run1.txt
+=======
+6. Filename follows the convention: \<TeamName>_\<QueryLanguage>_Run\<RunNumber>.\<FileFormat>. Example: TUW_EN_Run1.dat or TUW_DE_RUN2.dat
+>>>>>>> 733bb1ca6f2a78235e1cd443783f047708821710
 
